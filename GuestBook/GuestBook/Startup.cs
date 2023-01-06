@@ -1,11 +1,15 @@
-﻿namespace GuestBook;
+﻿using GuestBook.Extensions;
+
+namespace GuestBook;
 
 public class Startup
 {
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddControllers();
-        services.AddSwaggerGen();
+        services
+            .AddDB()
+            .AddSwaggerGen()
+            .AddControllers();
     }
  
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

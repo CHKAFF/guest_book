@@ -1,4 +1,6 @@
-﻿using GuestBook.Models;
+﻿using GuestBook.DB;
+using GuestBook.Models;
+using GuestBook.Models.Requests;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GuestBook.Controllers;
@@ -6,22 +8,21 @@ namespace GuestBook.Controllers;
 [Route("api/book")]
 public class BookController : ControllerBase
 {
+    private GuestBookDB guestBookDb;
+    public BookController(GuestBookDB guestBookDb)
+    {
+        this.guestBookDb = guestBookDb;
+    }
+    
     [HttpGet]
     public async Task<ActionResult<Guest[]>> GetAsync()
     {
-        return Ok(Array.Empty<Guest>());
+        return await guestBookDb.GetAll();
     }
 
     [HttpPost("guests")]
-    public async Task<ActionResult<Guest>> CreateGuestAsync()
+    public async Task<ActionResult<Guest>> CreateGuestAsync(CreateGuestRequest createGuestRequest)
     {
-        return Ok(
-            new Guest
-            {
-                Id = Guid.NewGuid(),
-                Name = "Ivan Ivanovich",
-                Message = "Всем привет",
-                AddedDate = DateTime.Now
-            });
+        return await guestBookDb.Create(createGuestRequest);
     }
 }
