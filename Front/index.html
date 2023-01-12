@@ -1,0 +1,93 @@
+<HTML>
+<HEAD>
+    <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+    <TITLE>GuestBook!</TITLE>
+</HEAD>
+</BODY>
+
+<!--GUESTBOOK-->
+<H1>GuestBook!</H2>
+    <HR>
+        <div class="comments">
+
+        </div>
+    <HR>
+    Comment:
+    <BR>
+    <FORM id="myForm" METHOD=POST ACTION="https://bbajg1voqolth3kkkd0c.containers.yandexcloud.net/api/book">
+
+
+        Name: <INPUT id="name" TYPE="text" NAME="Name" SIZE=25 MAXLENGTH=25>
+        <BR>
+        Message:
+        <BR>
+        <TEXTAREA id="message" ROWS=15 COLS=60 NAME="Message">
+    </TEXTAREA>
+        <BR>
+        <INPUT TYPE=submit VALUE="Send">
+        <INPUT TYPE=reset VALUE="clear">
+    </FORM>
+    <HR>
+    <ADDRESS>
+        <script>
+            (function () {
+                $('#myForm').submit(function(e){
+                    e.preventDefault();
+                    if (document.getElementById("name").value.trim() == "") {
+                        alert("Name is empty")
+                        return
+                    }
+
+                    if (document.getElementById("message").value.trim() == "") {
+                        alert("Message is empty")
+                        return
+                    }
+
+                    $.ajax({
+                        url: 'https://bbajg1voqolth3kkkd0c.containers.yandexcloud.net/api/book/guests',
+                        type: 'post',
+                        data:$('#myForm').serialize(),
+                        success:function(){
+                            window.location.reload();
+                        }
+                    });
+                });
+
+                fetch('.version')
+                    .then(response => response.text())
+                    .then(r => {$("<span>" + r + "</span>").appendTo(".frontv")})
+
+                let xhr = new XMLHttpRequest();
+                xhr.open("GET", "https://bbajg1voqolth3kkkd0c.containers.yandexcloud.net/api/info/version");
+                
+                xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    $("<span>" + xhr.responseText + "</span>").appendTo(".backv");
+                }};
+
+                xhr.send()
+
+                let xhr2 = new XMLHttpRequest();
+                xhr2.open("GET", "https://bbajg1voqolth3kkkd0c.containers.yandexcloud.net/api/info/host");
+                
+                xhr2.onreadystatechange = function () {
+                if (xhr2.readyState === 4) {
+                    $("<span>" + xhr2.responseText + "</span>").appendTo(".backName");
+                }};
+
+                xhr2.send()
+
+                fetch("https://bbajg1voqolth3kkkd0c.containers.yandexcloud.net/api/book")
+                    .then(response => response.json())
+                    .then(json => {for (i in json) {$("<B>" + json[i].name + "</B>  " + json[i].addedDate + "<P>" + json[i].message + "<HR>").appendTo(".comments")}})
+            })();
+        </script>
+        <b>Front</b><br>
+        <div class="frontv">Version: </div><br>
+        <b>Backend</b><br>
+        <div class="backv">Replic version: </div><br>
+        <div class="backName">Replic name: </div>
+    </ADDRESS>
+    </BODY>
+
+</HTML>
